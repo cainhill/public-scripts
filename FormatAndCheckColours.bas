@@ -10,6 +10,8 @@
 '   2. Sets all text hyperlinks to blue (#0000ff), if not already red (#ff0000)
 '   3. Sets all text highlights to use yellow (#ffff00)
 '   4. Sets all text/fill/border colours to pink, if not already greyscale (saturation = 0)
+' Dim fontColor As Long
+
 
 Sub CheckFormats()
     Dim slide As slide
@@ -33,7 +35,6 @@ End Sub
 
 Sub HandleText(shape as shape)
     Dim textRange As textRange: Set shape.TextFrame.TextRange
-    Dim fontColor As Long
     For i = 1 To textRange.Hyperlinks.Count
         textRange.Hyperlinks(i).TextRange.Font.Underline = True
         If textRange.Hyperlinks(i).TextRange.Font.Color <> RGB(255, 0, 0) Then
