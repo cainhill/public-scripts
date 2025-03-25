@@ -199,50 +199,6 @@ Function IsValidColor(color As Long) As Boolean
     End If
 End Function
 
-' Function to convert RGB color to HSL
-Function RGBToHSL(rgb As Long) As Variant
-    Dim r As Double, g As Double, b As Double
-    Dim h As Double, s As Double, l As Double
-    r = ((rgb And &HFF0000) \ &H10000) / 255
-    g = ((rgb And &HFF00) \ &H100) / 255
-    b = (rgb And &HFF) / 255
-    
-    Dim maxVal As Double, minVal As Double, delta As Double
-    maxVal = Application.WorksheetFunction.Max(r, g, b)
-    minVal = Application.WorksheetFunction.Min(r, g, b)
-    delta = maxVal - minVal
-    
-    ' Calculate luminance
-    l = (maxVal + minVal) / 2
-    
-    ' Calculate saturation
-    If delta = 0 Then
-        s = 0
-    Else
-        If l < 0.5 Then
-            s = delta / (maxVal + minVal)
-        Else
-            s = delta / (2 - maxVal - minVal)
-        End If
-    End If
-    
-    ' Calculate hue
-    If delta = 0 Then
-        h = 0
-    ElseIf maxVal = r Then
-        h = (g - b) / delta
-    ElseIf maxVal = g Then
-        h = (b - r) / delta + 2
-    Else
-        h = (r - g) / delta + 4
-    End If
-    
-    h = h * 60
-    If h < 0 Then h = h + 360
-    
-    RGBToHSL = Array(h, s, l)
-End Function
-
 ' Function to check if an "ISSUE" box is already present in the top-left corner of the slide
 Function IsIssueBoxPresent(slide As slide) As Boolean
     Dim shape As shape
