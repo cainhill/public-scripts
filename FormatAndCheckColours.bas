@@ -10,6 +10,45 @@
 '   2. Sets all text hyperlinks to blue (#0000ff), if not already red (#ff0000)
 '   3. Sets all text highlights to use yellow (#ffff00)
 '   4. Sets all text/fill/border colours to pink, if not already greyscale (saturation = 0)
+
+Sub CheckFormats()
+    Dim slide As slide
+    For Each slide In ActivePresentation.Slides
+      LoopShapes(slide)
+    Next slide
+End Sub
+
+Sub LoopShapes(slide As slide)
+    Dim shape As shape
+    For Each shape In slide.Shapes
+        If shape.HasTextFrame Then
+            If shape.TextFrame.HasText Then
+                HandleText(shape)
+            End If
+        End If
+        ' TODO: Image
+        ' TODO: Table
+    Next shape
+End Sub
+
+Sub HandleText(shape as shape)
+    Dim textRange As textRange: Set shape.TextFrame.TextRange
+    Dim fontColor As Long
+    For i = 1 To textRange.Hyperlinks.Count
+        textRange.Hyperlinks(i).TextRange.Font.Underline = True
+        If textRange.Hyperlinks(i).TextRange.Font.Color <> RGB(255, 0, 0) Then
+            textRange.Hyperlinks(i).TextRange.Font.Color = RGB(0, 0, 255)
+        End If
+    Next i
+End Sub
+
+
+
+' Returns true if colour is greyscale
+Function IsGrayscale(R As Integer, G As Integer, B As Integer) As Boolean
+    IsGrayscale = (R = G) And (G = B)
+End Function
+
 Sub FormatAndCheckColors()
     Dim slide As slide
     Dim shape As shape
@@ -22,7 +61,12 @@ Sub FormatAndCheckColors()
     Dim pictureBorderColor As Long
     Dim nonCompliantCount As Integer
     nonCompliantCount = 0
-    
+
+' HELPER: Returns true if colour is greyscale
+Function IsGrayscale(R As Integer, G As Integer, B As Integer) As Boolean
+    IsGrayscale = (R = G) And (G = B)
+End Function
+
     ' Loop through each slide
     For Each slide In ActivePresentation.Slides
         ' Loop through each shape in the slide
