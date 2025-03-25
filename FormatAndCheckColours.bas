@@ -48,19 +48,21 @@ Sub HandleText(shape as shape)
     End If
 End Sub
 
+' Returns true if colour is greyscale, red, blue, or pink
 Function IsValidColour(colour As Long) As Boolean
-    IsValidColour = (colour = RGB(255, 0, 0)) Or (colour = RGB(0, 0, 255)) Or (colour = RGB(255, 20, 147))
-    ' Valid colors are: red (#FF0000), blue (#0000FF), pink (#FF1493), or greyscale
-    If color = RGB(255, 0, 0) Or color = RGB(0, 0, 255) Or color = RGB(255, 20, 147) Then
-        IsValidColor = True ' Red, Blue, or Pink are allowed
-    ElseIf hsl(2) = 0 Then
-        IsValidColor = True ' Grayscale colors are allowed (saturation = 0)
-    Else
-        IsValidColor = False ' Non-compliant colors
-    End If
+    IsValidColour = IsGreyscale(Colour) Or (colour = RGB(255, 0, 0)) Or (colour = RGB(0, 0, 255)) Or (colour = RGB(255, 20, 147))
 End Function
 
 ' Returns true if colour is greyscale
+Function IsGrayscale(Colour As Long) As Boolean
+    Dim R As Integer: R = Colour Mod 256
+    Dim G As Integer: G = (Colour \ 256) Mod 256 
+    Dim B As Integer: B = (Colour \ 65536) Mod 256
+    IsGrayscale = (R = G) And (G = B)
+End Function
+
+
+
 Function IsGrayscale(R As Integer, G As Integer, B As Integer) As Boolean
     IsGrayscale = (R = G) And (G = B)
 End Function
