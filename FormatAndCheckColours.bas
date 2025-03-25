@@ -10,7 +10,7 @@
 '   2. Sets all text hyperlinks to blue (#0000ff), if not already red (#ff0000)
 '   3. Sets all text highlights to use yellow (#ffff00)
 '   4. Sets all text/fill/border colours to pink, if not already greyscale (saturation = 0)
-' Dim fontColor As Long
+' 
 
 
 Sub CheckFormats()
@@ -35,15 +35,30 @@ End Sub
 
 Sub HandleText(shape as shape)
     Dim textRange As textRange: Set shape.TextFrame.TextRange
+    Dim fontColour As Long
     For i = 1 To textRange.Hyperlinks.Count
         textRange.Hyperlinks(i).TextRange.Font.Underline = True
         If textRange.Hyperlinks(i).TextRange.Font.Color <> RGB(255, 0, 0) Then
             textRange.Hyperlinks(i).TextRange.Font.Color = RGB(0, 0, 255)
         End If
     Next i
+    fontColour = shape.TextFrame.TextRange.Font.Color
+    If Not IsValidColor(fontColour) Then
+        shape.TextFrame.TextRange.Font.Color = RGB(255, 20, 147)
+    End If
 End Sub
 
-
+Function IsValidColour(colour As Long) As Boolean
+    IsValidColour = (colour = RGB(255, 0, 0)) Or (colour = RGB(0, 0, 255)) Or (colour = RGB(255, 20, 147))
+    ' Valid colors are: red (#FF0000), blue (#0000FF), pink (#FF1493), or greyscale
+    If color = RGB(255, 0, 0) Or color = RGB(0, 0, 255) Or color = RGB(255, 20, 147) Then
+        IsValidColor = True ' Red, Blue, or Pink are allowed
+    ElseIf hsl(2) = 0 Then
+        IsValidColor = True ' Grayscale colors are allowed (saturation = 0)
+    Else
+        IsValidColor = False ' Non-compliant colors
+    End If
+End Function
 
 ' Returns true if colour is greyscale
 Function IsGrayscale(R As Integer, G As Integer, B As Integer) As Boolean
