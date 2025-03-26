@@ -41,7 +41,7 @@ End Sub
 
 Sub HandleText(shape as shape)
 
-    Dim textRange As textRange: Set shape.TextFrame.TextRange
+    Dim textRange As textRange: Set textRange = shape.TextFrame.TextRange
     Dim fontColour As Long
     Dim i As Integer
     Dim run As TextRange
@@ -53,6 +53,7 @@ Sub HandleText(shape as shape)
         End If
     Next i
 
+    If textRange.Runs.Count = 0 Then Exit Sub
     For i = 1 To textRange.Runs.Count
         Set run = textRange.Runs(i)
         If run.HighlightColor.RGB <> RGB(255, 255, 0) Then
@@ -83,8 +84,8 @@ Sub HandleShape(shape)
 End Sub
 
 Sub HandlePicture(shape)
-    Dim pictureBorderColor As Long: Set pictureBorderColour = shape.Line.ForeColor.RGB
-    If Not IsValidColor(pictureBorderColour) Then
+    Dim pictureBorderColor As Long: pictureBorderColour = shape.Line.ForeColor.RGB
+    If Not IsValidColour(pictureBorderColour) Then
         shape.Line.ForeColor.RGB = RGB(255, 20, 147)
     End If
 End Sub
@@ -114,7 +115,7 @@ Function IsValidColour(colour As Long) As Boolean
 End Function
 
 ' Returns true if colour is greyscale
-Function IsGrayscale(Colour As Long) As Boolean
+Function IsGreyscale(Colour As Long) As Boolean
     Dim R As Integer: R = Colour Mod 256
     Dim G As Integer: G = (Colour \ 256) Mod 256 
     Dim B As Integer: B = (Colour \ 65536) Mod 256
