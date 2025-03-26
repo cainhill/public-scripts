@@ -84,7 +84,7 @@ Sub HandleShape(shape)
 End Sub
 
 Sub HandlePicture(shape)
-    Dim pictureBorderColor As Long: pictureBorderColour = shape.Line.ForeColor.RGB
+    Dim pictureBorderColour As Long: pictureBorderColour = shape.Line.ForeColor.RGB
     If Not IsValidColour(pictureBorderColour) Then
         shape.Line.ForeColor.RGB = RGB(255, 20, 147)
     End If
