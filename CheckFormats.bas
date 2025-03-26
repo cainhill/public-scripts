@@ -34,18 +34,29 @@ Sub LoopShapes(slide As slide)
 End Sub
 
 Sub HandleText(shape as shape)
+
     Dim textRange As textRange: Set shape.TextFrame.TextRange
     Dim fontColour As Long
+    Dim i As Integer
+    Dim run As TextRange
+
     For i = 1 To textRange.Hyperlinks.Count
         textRange.Hyperlinks(i).TextRange.Font.Underline = True
         If textRange.Hyperlinks(i).TextRange.Font.Color <> RGB(255, 0, 0) Then
             textRange.Hyperlinks(i).TextRange.Font.Color = RGB(0, 0, 255)
         End If
     Next i
-    fontColour = shape.TextFrame.TextRange.Font.Color
-    If Not IsValidColor(fontColour) Then
-        shape.TextFrame.TextRange.Font.Color = RGB(255, 20, 147)
-    End If
+
+    For i = 1 To textRange.Runs.Count
+        Set run = textRange.Runs(i)
+        If Not IsValidColor(run.Font.Color) Then
+            run.Font.Color = RGB(255, 20, 147)
+        End If
+        If run.HighlightColor.RGB <> RGB(255, 255, 0) Then
+            run.HighlightColor.RGB = RGB(255, 255, 0)
+        End If
+    Next i
+
 End Sub
 
 ' Returns true if colour is greyscale, red, blue, or pink
@@ -61,11 +72,6 @@ Function IsGrayscale(Colour As Long) As Boolean
     IsGrayscale = (R = G) And (G = B)
 End Function
 
-
-
-Function IsGrayscale(R As Integer, G As Integer, B As Integer) As Boolean
-    IsGrayscale = (R = G) And (G = B)
-End Function
 
 Sub FormatAndCheckColors()
     Dim slide As slide
