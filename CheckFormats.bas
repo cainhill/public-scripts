@@ -33,6 +33,8 @@ Sub LoopShapes(slide As slide)
         End If
         If shape.HasTable Then
             HandleTable(shape)
+        Else
+            HandleShape(shape)
         End If
     Next shape
 End Sub
