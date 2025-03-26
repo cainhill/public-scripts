@@ -1,12 +1,11 @@
 ' Last Updated: March 25, 2025
 ' Author: Cain Hill
 ' Blog Post: medium.com/fixing-the-powerpoint-problem
-' Purpose: Fix formatting issues preventing your presentation's longevity 
 ' This Script:
 '   1. Sets all text hyperlinks to underlined
-'   2. Sets all text hyperlinks to blue (#0000ff), if not already red (#ff0000)
-'   3. Sets all text highlights to use yellow (#ffff00)
-'   4. Sets all text/fill/border colours to pink, if not already greyscale (saturation = 0)
+'   2. Sets all text hyperlinks to blue RGB(0, 0, 255), if not already red RGB(255, 0, 0)  
+'   3. Sets all text highlights to use yellow RGB(255, 255, 0)
+'   4. Sets all text/fill/border colours to pink RGB(255, 20, 147), if not already greyscale (R = G = B)
 
 Sub CheckFormats()
     Dim slide As Slide
