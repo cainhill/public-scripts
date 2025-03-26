@@ -1,17 +1,12 @@
 ' Last Updated: March 25, 2025
 ' Author: Cain Hill
-' Purpose: Use this script to find and fix slide formatting issues
-' Slide Format Goals:
-'   1. Text links must be underlined and coloured either blue or red
-'   2. Text highlights must be yellow
-'   3. Slides must only use this colour set: red, blue, greyscale, pink
+' Blog Post: medium.com/fixing-the-powerpoint-problem
+' Purpose: Fix formatting issues preventing your presentation's longevity 
 ' This Script:
 '   1. Sets all text hyperlinks to underlined
 '   2. Sets all text hyperlinks to blue (#0000ff), if not already red (#ff0000)
 '   3. Sets all text highlights to use yellow (#ffff00)
 '   4. Sets all text/fill/border colours to pink, if not already greyscale (saturation = 0)
-' 
-
 
 Sub CheckFormats()
     Dim slide As Slide
@@ -42,7 +37,6 @@ End Sub
 Sub HandleText(shape as shape)
 
     Dim textRange As textRange: Set textRange = shape.TextFrame.TextRange
-    Dim fontColour As Long
     Dim i As Integer
     Dim run As TextRange
 
@@ -93,6 +87,8 @@ End Sub
 Sub HandleTable(shape)
     Dim tableFillColour As Long
     Dim tableBorderColour As Long
+    Dim row As Row
+    Dim cell As Cell
     For Each row In shape.Table.Rows
 	      For Each cell In row.Cells
 	          tableFillColour = cell.Shape.Fill.ForeColor.RGB
