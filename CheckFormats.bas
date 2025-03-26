@@ -64,7 +64,20 @@ Sub HandleText(shape as shape)
 End Sub
 
 Sub HandleShape(shape)
-
+  Dim shapeFillColour As Long
+  Dim shapeBorderColour As Long
+	If shape.Fill.Visible Then
+	    shapeFillColour = shape.Fill.ForeColor.RGB
+	    If Not IsValidColor(shapeFillColour) Then
+	        shape.Fill.ForeColor.RGB = RGB(255, 20, 147)
+	    End If
+	End If
+	If shape.Line.Weight > 0 Then
+	    shapeBorderColour = shape.Line.ForeColor.RGB
+	    If Not IsValidColor(shapeBorderColour) Then
+	        shape.Line.ForeColor.RGB = RGB(255, 20, 147)
+	    End If
+	End If
 End Sub
 
 Sub HandlePicture(shape)
