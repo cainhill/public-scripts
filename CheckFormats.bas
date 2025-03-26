@@ -28,7 +28,9 @@ Sub LoopShapes(slide As slide)
                 HandleText(shape)
             End If
         End If
-        ' TODO: Image
+        If shape.Type = msoPicture Then
+            HandlePicture(shape)
+        End If
         ' TODO: Table
     Next shape
 End Sub
@@ -57,6 +59,13 @@ Sub HandleText(shape as shape)
         End If
     Next i
 
+End Sub
+
+Sub HandlePicture(shape)
+    Dim pictureBorderColor As Long: Set pictureBorderColour = shape.Line.ForeColor.RGB
+    If Not IsValidColor(pictureBorderColour) Then
+        shape.Line.ForeColor.RGB = RGB(255, 20, 147)
+    End If
 End Sub
 
 ' Returns true if colour is greyscale, red, blue, or pink
