@@ -31,7 +31,9 @@ Sub LoopShapes(slide As slide)
         If shape.Type = msoPicture Then
             HandlePicture(shape)
         End If
-        ' TODO: Table
+        If shape.HasTable Then
+            HandleTable(shape)
+        End If
     Next shape
 End Sub
 
@@ -61,11 +63,34 @@ Sub HandleText(shape as shape)
 
 End Sub
 
+Sub HandleShape(shape)
+
+End Sub
+
 Sub HandlePicture(shape)
     Dim pictureBorderColor As Long: Set pictureBorderColour = shape.Line.ForeColor.RGB
     If Not IsValidColor(pictureBorderColour) Then
         shape.Line.ForeColor.RGB = RGB(255, 20, 147)
     End If
+End Sub
+
+Sub HandleTable(shape)
+    Dim tableFillColour As Long
+    Dim tableBorderColour As Long
+    For Each row In shape.Table.Rows
+	      For Each cell In row.Cells
+	          tableFillColour = cell.Shape.Fill.ForeColor.RGB
+	          If Not IsValidColour(tableFillColour) Then
+	              cell.Shape.Fill.ForeColor.RGB = RGB(255, 20, 147)
+	          End If
+	          If cell.Shape.Line.Weight > 0 Then
+	              tableBorderColour = cell.Shape.Line.ForeColor.RGB
+	              If Not IsValidColour(tableBorderColour) Then
+	                  cell.Shape.Line.ForeColor.RGB = RGB(255, 20, 147)
+	              End If
+	          End If
+	      Next cell
+	  Next row
 End Sub
 
 ' Returns true if colour is greyscale, red, blue, or pink
@@ -79,101 +104,4 @@ Function IsGrayscale(Colour As Long) As Boolean
     Dim G As Integer: G = (Colour \ 256) Mod 256 
     Dim B As Integer: B = (Colour \ 65536) Mod 256
     IsGrayscale = (R = G) And (G = B)
-End Function
-
-
-Sub FormatAndCheckColors()
-    Dim slide As slide
-    Dim shape As shape
-    Dim textRange As textRange
-    Dim fontColor As Long
-    Dim fillColor As Long
-    Dim borderColor As Long
-    Dim tableFillColor As Long
-    Dim tableBorderColor As Long
-    Dim pictureBorderColor As Long
-    Dim nonCompliantCount As Integer
-    nonCompliantCount = 0
-
-            ' Check fill color
-            If shape.Fill.Type = msoFillSolid Then
-                fillColor = shape.Fill.ForeColor.RGB
-                If Not IsValidColor(fillColor) Then
-                    shape.Fill.ForeColor.RGB = RGB(255, 20, 147) ' Pink (#FF1493)
-                    nonCompliantCount = nonCompliantCount + 1
-                End If
-            End If
-
-            ' Check border color for shapes
-            If shape.Line.Visible = msoTrue Then
-                borderColor = shape.Line.ForeColor.RGB
-                If Not IsValidColor(borderColor) Then
-                    shape.Line.ForeColor.RGB = RGB(255, 20, 147) ' Pink (#FF1493)
-                    nonCompliantCount = nonCompliantCount + 1
-                End If
-            End If
-
-            ' Check table fill color
-            If shape.HasTable Then
-                For Each row In shape.Table.Rows
-                    For Each cell In row.Cells
-                        tableFillColor = cell.Shape.Fill.ForeColor.RGB
-                        If Not IsValidColor(tableFillColor) Then
-                            cell.Shape.Fill.ForeColor.RGB = RGB(255, 20, 147) ' Pink (#FF1493)
-                            nonCompliantCount = nonCompliantCount + 1
-                        End If
-                    Next cell
-                Next row
-
-                ' Check table border color
-                For Each row In shape.Table.Rows
-                    For Each cell In row.Cells
-                        tableBorderColor = cell.Shape.Line.ForeColor.RGB
-                        If Not IsValidColor(tableBorderColor) Then
-                            cell.Shape.Line.ForeColor.RGB = RGB(255, 20, 147) ' Pink (#FF1493)
-                            nonCompliantCount = nonCompliantCount + 1
-                        End If
-                    Next cell
-                Next row
-            End If
-
-            ' Check picture border color
-            If shape.Type = msoPicture Then
-                pictureBorderColor = shape.Line.ForeColor.RGB
-                If Not IsValidColor(pictureBorderColor) Then
-                    shape.Line.ForeColor.RGB = RGB(255, 20, 147) ' Pink (#FF1493)
-                    nonCompliantCount = nonCompliantCount + 1
-                End If
-            End If
-        Next shape
-
-        ' STEP 3: Add or remove the red "ISSUE" box in the top left corner based on non-compliant colors
-        If nonCompliantCount > 0 Then
-            ' Check if there is already an "ISSUE" box
-            If Not IsIssueBoxPresent(slide) Then
-                ' Create a red box in the top left corner with the text "ISSUE"
-                CreateIssueBox slide
-            End If
-        Else
-            ' If no non-compliant colors are found, delete the "ISSUE" box if it exists
-            If IsIssueBoxPresent(slide) Then
-                DeleteIssueBox slide
-            End If
-        End If
-    Next slide
-End Sub
-
-' Function to check if the color is valid (red, blue, pink, or grayscale)
-Function IsValidColor(color As Long) As Boolean
-    ' Valid colors are: red (#FF0000), blue (#0000FF), pink (#FF1493), or grayscale (saturation = 0)
-    Dim hsl As Variant
-    hsl = RGBToHSL(color)
-    
-    If color = RGB(255, 0, 0) Or color = RGB(0, 0, 255) Or color = RGB(255, 20, 147) Then
-        IsValidColor = True ' Red, Blue, or Pink are allowed
-    ElseIf hsl(2) = 0 Then
-        IsValidColor = True ' Grayscale colors are allowed (saturation = 0)
-    Else
-        IsValidColor = False ' Non-compliant colors
-    End If
 End Function
