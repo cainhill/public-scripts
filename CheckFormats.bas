@@ -119,5 +119,5 @@ Function IsGreyscale(Colour As Long) As Boolean
     Dim R As Integer: R = Colour Mod 256
     Dim G As Integer: G = (Colour \ 256) Mod 256 
     Dim B As Integer: B = (Colour \ 65536) Mod 256
-    IsGrayscale = (R = G) And (G = B)
+    IsGreyscale = (R = G) And (G = B)
 End Function
