@@ -49,11 +49,11 @@ Sub HandleText(shape as shape)
 
     For i = 1 To textRange.Runs.Count
         Set run = textRange.Runs(i)
-        If Not IsValidColor(run.Font.Color) Then
-            run.Font.Color = RGB(255, 20, 147)
-        End If
         If run.HighlightColor.RGB <> RGB(255, 255, 0) Then
             run.HighlightColor.RGB = RGB(255, 255, 0)
+        End If
+        If Not IsValidColor(run.Font.Color) Then
+            run.Font.Color = RGB(255, 20, 147)
         End If
     Next i
 
@@ -85,42 +85,6 @@ Sub FormatAndCheckColors()
     Dim pictureBorderColor As Long
     Dim nonCompliantCount As Integer
     nonCompliantCount = 0
-
-' HELPER: Returns true if colour is greyscale
-Function IsGrayscale(R As Integer, G As Integer, B As Integer) As Boolean
-    IsGrayscale = (R = G) And (G = B)
-End Function
-
-    ' Loop through each slide
-    For Each slide In ActivePresentation.Slides
-        ' Loop through each shape in the slide
-        For Each shape In slide.Shapes
-            ' STEP 1: Check for text hyperlinks and apply formatting
-            If shape.HasTextFrame Then
-                If shape.TextFrame.HasText Then
-                    Set textRange = shape.TextFrame.TextRange
-                    For i = 1 To textRange.Hyperlinks.Count
-                        ' Apply blue color (#0000ff) and underline to the hyperlink text
-                        If textRange.Hyperlinks(i).TextRange.Font.Color <> RGB(255, 0, 0) Then
-                            textRange.Hyperlinks(i).TextRange.Font.Color = RGB(0, 0, 255) ' Blue
-                            textRange.Hyperlinks(i).TextRange.Font.Underline = True
-                        End If
-                    Next i
-                    
-                    ' Remove non-yellow highlighting (assuming yellow is RGB(255, 255, 0))
-                    If textRange.HighlightColor.RGB <> RGB(255, 255, 0) Then
-                        textRange.HighlightColor.RGB = RGB(255, 255, 255) ' Remove highlight
-                    End If
-                End If
-            End If
-
-            ' STEP 2: Check colors and replace non-compliant colors with pink
-            ' Check font color
-            fontColor = shape.TextFrame.TextRange.Font.Color
-            If Not IsValidColor(fontColor) Then
-                shape.TextFrame.TextRange.Font.Color = RGB(255, 20, 147) ' Pink (#FF1493)
-                nonCompliantCount = nonCompliantCount + 1
-            End If
 
             ' Check fill color
             If shape.Fill.Type = msoFillSolid Then
@@ -204,39 +168,3 @@ Function IsValidColor(color As Long) As Boolean
         IsValidColor = False ' Non-compliant colors
     End If
 End Function
-
-' Function to check if an "ISSUE" box is already present in the top-left corner of the slide
-Function IsIssueBoxPresent(slide As slide) As Boolean
-    Dim shape As shape
-    On Error Resume Next
-    Set shape = slide.Shapes("IssueBox")
-    If Err.Number = 0 Then
-        IsIssueBoxPresent = True
-    Else
-        IsIssueBoxPresent = False
-    End If
-    On Error GoTo 0
-End Function
-
-' Function to create an "ISSUE" box in the top-left corner of the slide
-Sub CreateIssueBox(slide As slide)
-    Dim shape As shape
-    Set shape = slide.Shapes.AddTextbox(msoTextOrientationHorizontal, 0, 0, 100, 50)
-    shape.Name = "IssueBox"
-    shape.Fill.ForeColor.RGB = RGB(255, 0, 0) ' Red box
-    shape.Line.ForeColor.RGB = RGB(255, 0, 0) ' Red border
-    shape.TextFrame.TextRange.Text = "ISSUE"
-    shape.TextFrame.TextRange.Font.Color = RGB(255, 255, 255) ' White text
-    shape.TextFrame.TextRange.Font.Bold = msoTrue
-    shape.TextFrame.TextRange.Font.Size = 18
-    shape.TextFrame.TextRange.ParagraphFormat.Alignment = ppAlignCenter
-    shape.Top = 0
-    shape.Left = 0
-End Sub
-
-' Function to delete the "ISSUE" box if it exists
-Sub DeleteIssueBox(slide As slide)
-    On Error Resume Next
-    slide.Shapes("IssueBox").Delete
-    On Error GoTo 0
-End Sub
