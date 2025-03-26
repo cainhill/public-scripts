@@ -14,14 +14,14 @@
 
 
 Sub CheckFormats()
-    Dim slide As slide
+    Dim slide As Slide
     For Each slide In ActivePresentation.Slides
       LoopShapes(slide)
     Next slide
 End Sub
 
 Sub LoopShapes(slide As slide)
-    Dim shape As shape
+    Dim shape As Shape
     For Each shape In slide.Shapes
         If shape.HasTextFrame Then
             If shape.TextFrame.HasText Then
@@ -71,13 +71,13 @@ Sub HandleShape(shape)
   Dim shapeBorderColour As Long
 	If shape.Fill.Visible Then
 	    shapeFillColour = shape.Fill.ForeColor.RGB
-	    If Not IsValidColor(shapeFillColour) Then
+	    If Not IsValidColour(shapeFillColour) Then
 	        shape.Fill.ForeColor.RGB = RGB(255, 20, 147)
 	    End If
 	End If
 	If shape.Line.Weight > 0 Then
 	    shapeBorderColour = shape.Line.ForeColor.RGB
-	    If Not IsValidColor(shapeBorderColour) Then
+	    If Not IsValidColour(shapeBorderColour) Then
 	        shape.Line.ForeColor.RGB = RGB(255, 20, 147)
 	    End If
 	End If
