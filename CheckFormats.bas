@@ -89,19 +89,19 @@ Sub HandleTable(shape)
     Dim row As Row
     Dim cell As Cell
     For Each row In shape.Table.Rows
-	      For Each cell In row.Cells
-	          tableFillColour = cell.Shape.Fill.ForeColor.RGB
-	          If Not IsValidColour(tableFillColour) Then
-	              cell.Shape.Fill.ForeColor.RGB = RGB(255, 20, 147)
-	          End If
-	          If cell.Shape.Line.Weight > 0 Then
-	              tableBorderColour = cell.Shape.Line.ForeColor.RGB
-	              If Not IsValidColour(tableBorderColour) Then
-	                  cell.Shape.Line.ForeColor.RGB = RGB(255, 20, 147)
-	              End If
-	          End If
-	      Next cell
-	  Next row
+        For Each cell In row.Cells
+	        tableFillColour = cell.Shape.Fill.ForeColor.RGB
+	        If Not IsValidColour(tableFillColour) Then
+	            cell.Shape.Fill.ForeColor.RGB = RGB(255, 20, 147)
+	        End If
+	        If cell.Shape.Line.Weight > 0 Then
+	            tableBorderColour = cell.Shape.Line.ForeColor.RGB
+	            If Not IsValidColour(tableBorderColour) Then
+		            cell.Shape.Line.ForeColor.RGB = RGB(255, 20, 147)
+	            End If
+            End If
+        Next cell
+    Next row
 End Sub
 
 ' Returns true if colour is greyscale, red, blue, or pink
