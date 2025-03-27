@@ -1,5 +1,6 @@
 # Public Scripts
 
-Environment | Script | Purpose
+Environment | Script | PurposeKura Sushi Global Flagship Store Asakusa
+
 --- | --- | ---
-VBA PowerPoint | CheckFormats.bas |
+VBA PowerPoint | [CheckFormats.bas](vba/ppt/CheckFormats.bas) |
