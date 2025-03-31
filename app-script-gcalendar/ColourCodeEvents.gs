@@ -42,6 +42,17 @@ function colorCodeEvents() {
   }
 }
 
+function makeTasksYellow(event, defaultColour) {
+  if (title.startsWith("-") || title.startsWith("Task:")) {
+    event.setColor(CalendarApp.EventColor.BANANA_YELLOW);
+  }
+  else {
+    if (event.getColor() === CalendarApp.EventColor.BANANA_YELLOW) {
+      event.setColor(defaultColor);
+    }
+  }
+}
+
 function eventIsMissingDetails(event) {
   var title = event.getTitle();
   var location = event.getLocation();
