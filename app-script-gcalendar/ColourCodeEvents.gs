@@ -1,10 +1,17 @@
+var CONFIG = {
+  primaryCalendars = [
+    'calendarId1@gmail.com',
+    'calendarId2@group.calendar.google.com'
+  ]
+};
+
 function colorCodeEvents() {
-  var calendarIds = ['calendarId1@gmail.com', 'calendarId2@group.calendar.google.com']; // Replace with your calendar IDs
+  
   var now = new Date();
   var threeMonthsLater = new Date();
   threeMonthsLater.setMonth(now.getMonth() + 3);
 
-  for (var i = 0; i < calendarIds.length; i++) {
+  for (var i = 0; i < CONFIG.primaryCalendars.length; i++) {
     var calendar = CalendarApp.getCalendarById(calendarIds[i]);
     if (!calendar) {
       Logger.log("Calendar not found: " + calendarIds[i]);
@@ -15,11 +22,8 @@ function colorCodeEvents() {
 
     for (var j = 0; j < events.length; j++) {
       var event = events[j];
-      var title = event.getTitle();
-      var eventColor = event.getColor();
-      var defaultColor = calendar.getColor(); //get the default calendar color.
-
-      
+      applyYellowRule(event):
+      applyRedRule(event):
     }
   }
 }
