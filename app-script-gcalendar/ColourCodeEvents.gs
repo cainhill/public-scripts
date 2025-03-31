@@ -19,36 +19,29 @@ function colorCodeEvents() {
       var eventColor = event.getColor();
       var defaultColor = calendar.getColor(); //get the default calendar color.
 
-      // Rule 1: Events starting with "-" or "Task:" to Banana yellow
-      if (title.startsWith("-") || title.startsWith("Task:")) {
-        event.setColor(CalendarApp.EventColor.BANANA_YELLOW);
-      }
-      // Rule 2: Banana yellow events without "-" or "Task:" to default color
-      else if (eventColor === CalendarApp.EventColor.BANANA_YELLOW) {
-        if (!title.startsWith("-") && !title.startsWith("Task:")) {
-          event.setColor(defaultColor);
-        }
-      }
-
-      // Rule 3: Events with "!", "TBC", "TBD", "#tobook", "#topay", "#toconfirm" to dark red
-      if (eventIsMissingDetails(event)) {
-        event.setColor(CalendarApp.EventColor.DARK_RED);
-      }
-      // Rule 4: dark red events with none of the above to default color.
-      else if (eventColor === CalendarApp.EventColor.DARK_RED){
-        event.setColor(defaultColor);
-      }
+      
     }
   }
 }
 
-function applyTaskColor(event) {
+function applyYellowRule(event) {
   var title = event.getTitle();
   var defaultColor = event.getCalendar().getColor();
   if (title.startsWith("-") || title.startsWith("Task:")) {
     event.setColor(CalendarApp.EventColor.BANANA_YELLOW);
   }
   else if (event.getColor() === CalendarApp.EventColor.BANANA_YELLOW) {
+    event.setColor(defaultColor);
+  }
+}
+
+function applyRedRule(event) {
+  var title = event.getTitle();
+  var defaultColor = event.getCalendar().getColor();
+  if (eventIsMissingDetails(event)) {
+    event.setColor(CalendarApp.EventColor.DARK_RED);
+  }
+  else if (event.getColor() === CalendarApp.EventColor.DARK_RED) {
     event.setColor(defaultColor);
   }
 }
