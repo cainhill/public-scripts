@@ -42,14 +42,14 @@ function colorCodeEvents() {
   }
 }
 
-function makeTasksYellow(event, defaultColour) {
+function applyTaskColor(event) {
+  var title = event.getTitle();
+  var defaultColor = event.getCalendar().getColor();
   if (title.startsWith("-") || title.startsWith("Task:")) {
     event.setColor(CalendarApp.EventColor.BANANA_YELLOW);
   }
-  else {
-    if (event.getColor() === CalendarApp.EventColor.BANANA_YELLOW) {
-      event.setColor(defaultColor);
-    }
+  else if (event.getColor() === CalendarApp.EventColor.BANANA_YELLOW) {
+    event.setColor(defaultColor);
   }
 }
 
