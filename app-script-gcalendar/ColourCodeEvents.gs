@@ -55,6 +55,7 @@ function eventIsMissingDetails(event) {
     title.includes("TBD") ||
     title.includes("#tobook") ||
     title.includes("#topay") ||
+    title.includes("#unpaid") ||
     title.includes("#toconfirm") ||
     (location && (location.includes("TBC") || location.includes("TBD")))
   );
