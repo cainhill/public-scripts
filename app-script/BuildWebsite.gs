@@ -42,18 +42,22 @@ function getRecentlyChanged(docs, lastRun) {
     Logger.log('getRecentlyChanged().docId = ' + docId);
     var lastModified = doc.getLastUpdated().getTime();
     Logger.log('getRecentlyChanged().lastModified = ' + lastModified);
+    if (lastModified <= lastRun) {
+      continue;
+    }
     var publishedLink = getPublishedLink(docId);
     Logger.log('getRecentlyChanged().publishedLink = ' + publishedLink);
-    if (lastModified > lastRun && publishedLink) {
-      changedDocs.push([doc.getUrl(), publishedLink, doc.getLastUpdated()]);
+    if (!publishedLink) {
+      continue;
     }
+    changedDocs.push([doc.getUrl(), publishedLink, doc.getLastUpdated()]);
   }
   return changedDocs;
 }
 
 function getPublishedLink(docId) {
   try {
-    var revisions = Drive.Revisions.list(docId).revisions;
+    const revisions = Drive.Revisions.list(docId).revisions;
     Logger.log('getPublishedLink().revisions = ' + JSON.stringify(revisions));
     if (!revisions || revisions.length === 0) {
       Logger.log('getPublishedLink().revisions.length = ' + (revisions ? revisions.length : 0));
@@ -63,11 +67,11 @@ function getPublishedLink(docId) {
       return new Date(b.modifiedTime) - new Date(a.modifiedTime);
     });
     var latestRevisionId = revisions[0].id;
-    var publishedLink = Drive.Revisions.get(docId,latestRevisionId,{fields:'publishedLink'}).publishedLink;
-    Logger.log( 'getPublishedLink().publishedLink = ' + publishedLink );
+    var publishedLink = Drive.Revisions.get(docId, latestRevisionId, { fields: 'publishedLink' }).publishedLink || false;
+    Logger.log('getPublishedLink().publishedLink = ' + publishedLink);
     return publishedLink;
   } catch (e) {
-    Logger.log( 'getPublishedLink().error = ' + e.toString() );
+    Logger.log('getPublishedLink().error = ' + e.toString());
     return false;
   }
 }
