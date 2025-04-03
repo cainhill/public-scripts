@@ -9,7 +9,7 @@ function addRecentChangesToTracker() {
     var folder = DriveApp.getFolderById(CONFIG.drive.folderId);
     var docs = folder.getFilesByType(MimeType.GOOGLE_DOCS);
     var recentlyChanged = getRecentlyChanged(docs, lastRun);
-    saveListToSheet(recentlyChanged, sheet);
+    saveToSheet(recentlyChanged, sheet);
     PropertiesService.getScriptProperties().setProperty('lastRun', new Date().getTime());
 }
 
