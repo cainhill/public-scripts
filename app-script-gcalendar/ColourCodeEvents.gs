@@ -6,26 +6,21 @@ var CONFIG = {
 };
 
 function colorCodeEvents() {
-  
   var now = new Date();
   var threeMonthsLater = new Date();
   threeMonthsLater.setMonth(now.getMonth() + 3);
-
   for (var i = 0; i < CONFIG.primaryCalendars.length; i++) {
     var calendar = CalendarApp.getCalendarById(calendarIds[i]);
-    if (!calendar) {
-      Logger.log("Calendar not found: " + calendarIds[i]);
-      continue;
-    }
-
     var events = calendar.getEvents(now, threeMonthsLater);
-
     for (var j = 0; j < events.length; j++) {
-      var event = events[j];
-      applyYellowRule(event):
-      applyRedRule(event):
+      appleRules(events[i]);
     }
   }
+}
+
+function applyRules(event) {
+  applyYellowRule(event);
+  applyRedRule(event);
 }
 
 function applyYellowRule(event) {
@@ -54,6 +49,7 @@ function eventIsMissingDetails(event) {
   var title = event.getTitle();
   var location = event.getLocation();
   return (
+    title.startsWith("?") ||
     title.includes("!") ||
     title.includes("TBC") ||
     title.includes("TBD") ||
