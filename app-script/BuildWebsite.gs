@@ -9,13 +9,13 @@ function addRecentChangesToTracker() {
     var folder = DriveApp.getFolderById(CONFIG.drive.folderId);
     var docs = folder.getFilesByType(MimeType.GOOGLE_DOCS);
     var recentlyChanged = getRecentlyChanged(docs, lastRun);
-    saveListToTracker(recentlyChanged, sheet);
+    saveListToSheet(recentlyChanged, sheet);
     PropertiesService.getScriptProperties().setProperty('lastRun', new Date().getTime());
 }
 
-function saveListToTracker(recentlyChanged, sheet) {
+function saveToSheet(recentlyChanged, sheet) {
     if (recentlyChanged.length === 0) {
-        Logger.log('saveListToTracker().recentlyChanged.length = ' + recentlyChanged.length);
+        Logger.log('saveListToSheet().recentlyChanged.length = ' + recentlyChanged.length);
         return;
     }
     var lastRow = sheet.getLastRow();
