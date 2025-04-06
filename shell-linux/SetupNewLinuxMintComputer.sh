@@ -23,6 +23,8 @@ sudo apt install -y \
 # TODO: Download and set wallpaper
 # TODO: Configure start menu
 # TODO: Add apps to taskbar
+# TODO: Add git / cloning public-scripts to local
+# TODO: Add rclone
 
 # --- Configure Gnome Tweaks for Dark Mode ---
 echo "Configuring Gnome Tweaks for Dark Mode..."
