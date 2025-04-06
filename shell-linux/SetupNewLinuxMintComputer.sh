@@ -18,6 +18,12 @@ sudo apt install -y \
     brave-browser \
     firefox
 
+# TODO: Add VLC
+# TODO: Add xscreensaver + settings
+# TODO: Download and set wallpaper
+# TODO: Configure start menu
+# TODO: Add apps to taskbar
+
 # --- Configure Gnome Tweaks for Dark Mode ---
 echo "Configuring Gnome Tweaks for Dark Mode..."
 gsettings set org.gnome.desktop.interface gtk-theme 'Mint-Y-Dark'
