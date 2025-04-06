@@ -18,6 +18,7 @@ sudo apt install -y \
     brave-browser \
     firefox
 
+# TODO: Configure Brave settings
 # TODO: Add VLC
 # TODO: Add xscreensaver + settings
 # TODO: Download and set wallpaper
