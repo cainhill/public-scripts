@@ -74,23 +74,25 @@ function getSheetData(sheetID, columnName, searchValue) {
 // new
 
 
-function getSheetInfo(sheetId, columnName) {
-  Logger.log(`getSheetInfo(sheetId "${sheetId}", columnName "${columnName}")`);
+function getSheetInfo(sheetId, keyColumnName) {
+  Logger.log(`getSheetInfo(sheetId "${sheetId}", keyColumnName "${keyColumnName}")`);
   try {
     // Get the workbook
     const workbook = SpreadsheetApp.openById(sheetID);
-    const firstSheetIndex = 0;
     
     // Get the first sheet from the workbook 
+    const firstSheetIndex = 0;
     const sheet = workbook.getSheets()[firstSheetIndex];
     
     // Get the column headings from the first row
-    const header = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-    const columnIndex = header.indexOf(columnName);
+    const columnHeadings = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    
+    // Get the index of the keyColumnName within columnHeadings
+    const keyColumnIndex = columnHeadings.indexOf(keyColumnName);
 
-    // Return early if columnName not found in sheet
-    if (columnIndex === -1) {
-      Logger.log(`getSheetInfo(sheetId "${sheetId}", columnName "${columnName}"): Column "${columnName}" not found in header`);
+    // Return early if keyColumnName not found in columnHeadings
+    if (keyColumnIndex === -1) {
+      Logger.log(`getSheetInfo(sheetId "${sheetId}", keyColumnName "${keyColumnName}"): keyColumnName "${keyColumnName}" not found in columnHeading`);
       return false;
     }
 
@@ -101,22 +103,25 @@ function getSheetInfo(sheetId, columnName) {
       columnIndex: columnIndex
     };
   } catch (e) {
-    Logger.log(`getSheetInfo("${sheetId}").error = ${e.toString()}`);
+    Logger.log(`getSheetInfo(sheetId "${sheetId}").error = ${e.toString()}`);
     return false;
   }
 }
 
 function getSheetData(sheetId, columnName, searchValue) {
   Logger.log(`getSheetData(sheetId "${sheetId}", columnName "${columnName}", searchValue "${searchValue}")`);
+  
+  // Get the sheet info or return early if any issue
   const sheetInfo = getSheetInfo(sheetId, columnName);
-
   if (!sheetInfo) {
     return false;
   }
-
   try {
+  
+    // Get the sheet info
     const { sheet, header, columnIndex } = sheetInfo;
-
+    
+    // Get all data on the sheet including column headings
     const values = sheet.getDataRange().getValues();
 
     if (values.length === 0) {
