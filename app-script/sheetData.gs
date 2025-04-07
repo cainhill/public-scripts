@@ -116,7 +116,7 @@ function getSheetData(sheetId, keyColumnName, searchValue) {
     
     // Get all values on the sheet including column headings
     const values = sheet.getDataRange().getValues();
-    Logger.log(`getSheetData().values.length = ${values.length()}`);
+    Logger.log(`getSheetData().values.length = ${values.length}`);
 
     // Return false if the sheet is empty
     if (values.length === 0) return false;
