@@ -76,17 +76,25 @@ function getSheetData(sheetID, columnName, searchValue) {
 
 function getSheetInfo(sheetId, columnName) {
   try {
+  
+    // Get the workbook
     const workbook = SpreadsheetApp.openById(sheetID);
     const firstSheetIndex = 0;
+    
+    // Get the first sheet from the workbook 
     const sheet = workbook.getSheets()[firstSheetIndex];
+    
+    // Get the column headings from the first row
     const header = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
     const columnIndex = header.indexOf(columnName);
 
+    // Return early if columnName not found in sheet
     if (columnIndex === -1) {
-      Logger.log(`getSheetInfo(${sheetId},${columnName}): Column "${columnName}" not found in header`);
+      Logger.log(`getSheetInfo("${sheetId}","${columnName}"): Column "${columnName}" not found in header`);
       return false;
     }
 
+    // Return sheet info
     return {
       sheet: sheet,
       header: header,
@@ -94,7 +102,7 @@ function getSheetInfo(sheetId, columnName) {
     };
 
   } catch (e) {
-    Logger.log(`getSheetInfo(${sheetId}).error = ${e.toString()}`);
+    Logger.log(`getSheetInfo("${sheetId}").error = ${e.toString()}`);
     return false;
   }
 }
