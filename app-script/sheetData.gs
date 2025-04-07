@@ -84,7 +84,7 @@ function getSheetInfo(sheetId, keyColumnName) {
     const firstSheetIndex = 0;
     const sheet = workbook.getSheets()[firstSheetIndex];
     
-    // Get the column headings from the first row
+    // Get the columnHeadings from the first row
     const columnHeadings = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
     
     // Get the index of the keyColumnName within columnHeadings
@@ -99,8 +99,8 @@ function getSheetInfo(sheetId, keyColumnName) {
     // Return sheet info
     return {
       sheet: sheet,
-      header: header,
-      columnIndex: columnIndex
+      columnHeadings: columnHeadings,
+      keyColumnIndex: keyColumnIndex
     };
   } catch (e) {
     Logger.log(`getSheetInfo(sheetId "${sheetId}").error = ${e.toString()}`);
@@ -108,43 +108,49 @@ function getSheetInfo(sheetId, keyColumnName) {
   }
 }
 
-function getSheetData(sheetId, columnName, searchValue) {
-  Logger.log(`getSheetData(sheetId "${sheetId}", columnName "${columnName}", searchValue "${searchValue}")`);
+function getSheetData(sheetId, keyColumnName, searchValue) {
+  Logger.log(`getSheetData(sheetId "${sheetId}", keyColumnName "${keyColumnName}", searchValue "${searchValue}")`);
   
   // Get the sheet info or return early if any issue
-  const sheetInfo = getSheetInfo(sheetId, columnName);
+  const sheetInfo = getSheetInfo(sheetId, keyColumnName);
+  Logger.log(`getSheetData().sheetInfo = ${JSON.stringify(sheetInfo)}`);
   if (!sheetInfo) {
     return false;
   }
   try {
   
-    // Get the sheet info
-    const { sheet, header, columnIndex } = sheetInfo;
+    // Save the sheet info into local variables
+    const { sheet, header, keyColumnIndex } = sheetInfo;
     
-    // Get all data on the sheet including column headings
+    // Get all values on the sheet including column headings
     const values = sheet.getDataRange().getValues();
+    Logger.log(`getSheetData().values.length = ${values.length()}`);
 
+    // Return false if the sheet is empty
     if (values.length === 0) {
-      Logger.log(`getSheetData(${sheetId}).values.length = ${values.length}`);
-      return null;
+      return false;
     }
 
+    // Store all other rows as dataRows
     const dataRows = values.slice(1);
-    Logger.log(`getSheetData(${sheetId}).dataRows.length = ${dataRows.length}`);
+    Logger.log(`getSheetData().dataRows.length = ${dataRows.length}`);
 
+    // Loop through dataRows to find the row with the matching searchValue
     for (const row of dataRows) {
-      if (row[columnIndex] === searchValue) {
+      if (row[keyColumnIndex] === searchValue) {
+      
+        // Convert the matching row into a rowObject
         const rowObject = {};
-        for (let i = 0; i < header.length; i++) {
-          rowObject[header[i]] = row[i];
-        }
-        Logger.log(`getSheetData(${sheetId}).Found row: ${JSON.stringify(rowObject)}`);
+        for (let i = 0; i < columnHeadings.length; i++) {
+          rowObject[columnHeadings[i]] = row[i];
+        } 
+        Logger.log(`getSheetData().rowObject = ${JSON.stringify(rowObject)}`);
         return rowObject;
       }
     }
 
-    Logger.log(`getSheetData(${sheetId}).No matching row found for column "${columnName}" with value "${searchValue}".`);
-    return null;
+    Logger.log('getSheetData(): Could not find a row matching that searchValue in keyColumnName');
+    return false;
 
   } catch (e) {
     Logger.log(`getSheetData(${sheetId}).error = ${e.toString()}`);
