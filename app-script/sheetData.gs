@@ -100,7 +100,6 @@ function getSheetInfo(sheetId, columnName) {
       header: header,
       columnIndex: columnIndex
     };
-
   } catch (e) {
     Logger.log(`getSheetInfo("${sheetId}").error = ${e.toString()}`);
     return false;
@@ -108,7 +107,8 @@ function getSheetInfo(sheetId, columnName) {
 }
 
 function getSheetData(sheetId, columnName, searchValue) {
-  Logger.log(`getSheetData(${sheetId}).Called with columnName: "${columnName}", searchValue: "${searchValue}".`);
+
+  Logger.log(`getSheetData("${sheetId}","${columnName}","${searchValue}")`);
   const sheetInfo = getSheetInfo(sheetId, columnName);
 
   if (!sheetInfo) {
