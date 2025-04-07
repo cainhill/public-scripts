@@ -82,10 +82,11 @@ function getSheetInfo(sheetId, keyColumnName) {
     const sheet = workbook.getSheets()[firstSheetIndex];
     const columnHeadings = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
     const keyColumnIndex = columnHeadings.indexOf(keyColumnName);
+    const notFound = -1;
 
     // Return early if keyColumnName not found in columnHeadings
-    if (keyColumnIndex === -1) {
-      Logger.log(`getSheetInfo(sheetId "${sheetId}", keyColumnName "${keyColumnName}"): keyColumnName "${keyColumnName}" not found in columnHeading`);
+    if (keyColumnIndex === notFound) {
+      Logger.log('getSheetInfo(): keyColumnName not found in columnHeadings');
       return false;
     }
 
@@ -96,7 +97,7 @@ function getSheetInfo(sheetId, keyColumnName) {
       keyColumnIndex: keyColumnIndex
     };
   } catch (e) {
-    Logger.log(`getSheetInfo(sheetId "${sheetId}").error = ${e.toString()}`);
+    Logger.log(`getSheetInfo().error = ${e.toString()}`);
     return false;
   }
 }
@@ -107,13 +108,11 @@ function getSheetData(sheetId, keyColumnName, searchValue) {
   // Get the sheet info or return early if any issue
   const sheetInfo = getSheetInfo(sheetId, keyColumnName);
   Logger.log(`getSheetData().sheetInfo = ${JSON.stringify(sheetInfo)}`);
-  if (!sheetInfo) {
-    return false;
-  }
+  if (!sheetInfo) return false;
   try {
   
     // Save the sheet info into local variables
-    const { sheet, header, keyColumnIndex } = sheetInfo;
+    const { sheet, columnHeadings, keyColumnIndex } = sheetInfo;
     
     // Get all values on the sheet including column headings
     const values = sheet.getDataRange().getValues();
