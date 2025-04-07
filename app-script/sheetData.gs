@@ -75,8 +75,8 @@ function getSheetData(sheetID, columnName, searchValue) {
 
 
 function getSheetInfo(sheetId, columnName) {
+  Logger.log(`getSheetInfo(sheetId "${sheetId}", columnName "${columnName}")`);
   try {
-  
     // Get the workbook
     const workbook = SpreadsheetApp.openById(sheetID);
     const firstSheetIndex = 0;
@@ -90,7 +90,7 @@ function getSheetInfo(sheetId, columnName) {
 
     // Return early if columnName not found in sheet
     if (columnIndex === -1) {
-      Logger.log(`getSheetInfo("${sheetId}","${columnName}"): Column "${columnName}" not found in header`);
+      Logger.log(`getSheetInfo(sheetId "${sheetId}", columnName "${columnName}"): Column "${columnName}" not found in header`);
       return false;
     }
 
@@ -107,8 +107,7 @@ function getSheetInfo(sheetId, columnName) {
 }
 
 function getSheetData(sheetId, columnName, searchValue) {
-
-  Logger.log(`getSheetData("${sheetId}","${columnName}","${searchValue}")`);
+  Logger.log(`getSheetData(sheetId "${sheetId}", columnName "${columnName}", searchValue "${searchValue}")`);
   const sheetInfo = getSheetInfo(sheetId, columnName);
 
   if (!sheetInfo) {
