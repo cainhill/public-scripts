@@ -77,17 +77,10 @@ function getSheetData(sheetID, columnName, searchValue) {
 function getSheetInfo(sheetId, keyColumnName) {
   Logger.log(`getSheetInfo(sheetId "${sheetId}", keyColumnName "${keyColumnName}")`);
   try {
-    // Get the workbook
     const workbook = SpreadsheetApp.openById(sheetID);
-    
-    // Get the first sheet from the workbook 
     const firstSheetIndex = 0;
     const sheet = workbook.getSheets()[firstSheetIndex];
-    
-    // Get the columnHeadings from the first row
     const columnHeadings = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-    
-    // Get the index of the keyColumnName within columnHeadings
     const keyColumnIndex = columnHeadings.indexOf(keyColumnName);
 
     // Return early if keyColumnName not found in columnHeadings
@@ -127,9 +120,7 @@ function getSheetData(sheetId, keyColumnName, searchValue) {
     Logger.log(`getSheetData().values.length = ${values.length()}`);
 
     // Return false if the sheet is empty
-    if (values.length === 0) {
-      return false;
-    }
+    if (values.length === 0) return false;
 
     // Store all other rows as dataRows
     const dataRows = values.slice(1);
