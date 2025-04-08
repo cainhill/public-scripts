@@ -1,5 +1,5 @@
-function saveToGitHub(htmlContent, filePath, commitMessage) {
-  Logger.log(`saveToGitHub(htmlContent: "${htmlContent}", filePath: "${filePath}", commitMessage: "${commitMessage}")`);
+function saveToGithub(htmlContent, filePath, commitMessage) {
+  Logger.log(`saveToGithub(htmlContent: "${htmlContent}", filePath: "${filePath}", commitMessage: "${commitMessage}")`);
 
   // Gather the credentials
   const githubUsername = CONFIG.github.username;
@@ -50,8 +50,7 @@ function callGithubApi(apiUrl, method, headers, payload) {
 }
 
 function getFileShaInternal(githubUsername, githubRepo, filePath, branch, headers) {
-  
   const apiUrl = `https://api.github.com/repos/${githubUsername}/${githubRepo}/contents/${filePath}?ref=${branch}`;
-  const response = callGitHubApi(apiUrl, 'GET', headers, null);
+  const response = callGithubApi(apiUrl, 'GET', headers, null);
   return response.code === 200 && response.json && response.json.sha ? response.json.sha : null;
 }
