@@ -29,6 +29,7 @@ function saveToGithub(htmlContent, filePath, commitMessage) {
 }
 
 function callGithubApi(apiUrl, method, headers, payload) {
+  Logger.log(`callGithubApi(apiUrl: ${apiUrl}, method: ${method}, headers: ${headers}, payload: ${payload})`);
   const options = {
     method: method,
     headers: headers,
