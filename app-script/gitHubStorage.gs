@@ -1,7 +1,7 @@
-function saveToGitHub(htmlContent, filePath, commitMessage) {
-  Logger.log(`saveToGitHub(htmlContent: "${htmlContent}", filePath: "${filePath}", commitMessage: "${commitMessage}")`);
+function saveToGithub(htmlContent, filePath, commitMessage) {
+  Logger.log(`saveToGithub(htmlContent: "${htmlContent}", filePath: "${filePath}", commitMessage: "${commitMessage}")`);
   
-  // Gather the GitHub credentials
+  // Gather the credentials
   const githubUsername = CONFIG.github.username;
   const githubRepo = CONFIG.github.repo;
   const githubToken = CONFIG.github.token;
@@ -9,7 +9,11 @@ function saveToGitHub(htmlContent, filePath, commitMessage) {
 
   // Prepare the request
   const apiUrl = `https://api.github.com/repos/${githubUsername}/${githubRepo}/contents/${filePath}`;
-  const headers = buildGitHubHeaders(githubToken, githubUsername);
+  const headers = {
+    'Authorization': `token ${githubToken}`,
+    'Content-Type': 'application/json',
+    'User-Agent': githubUsername
+  };
   const base64Content = Utilities.base64Encode(htmlContent);
   const sha = getFileShaInternal(githubUsername, githubToken, githubRepo, filePath, githubBranch);
   const payload = JSON.stringify({
@@ -20,17 +24,11 @@ function saveToGitHub(htmlContent, filePath, commitMessage) {
   });
 
   // Make the request
-  const response = callGitHubApi(apiUrl, 'PUT', headers, payload);
-
-  Logger.log(`saveToGitHub() - Response Code: ${response.code}`);
-  Logger.log(`saveToGitHub() - Response Body: ${response.body}`);
-
+  const response = callGithubApi(apiUrl, 'PUT', headers, payload);
   return response.code >= 200 && response.code < 300;
 }
 
-
-
-function callGitHubApi(apiUrl, method, headers, payload) {
+function callGithubApi(apiUrl, method, headers, payload) {
   const options = {
     method: method,
     headers: headers,
@@ -59,12 +57,3 @@ function getFileShaInternal(githubUsername, githubToken, githubRepo, filePath, b
   const response = callGitHubApi(apiUrl, 'GET', headers, null);
   return response.code === 200 && response.json && response.json.sha ? response.json.sha : null;
 }
-
-function buildGitHubHeaders(githubToken, githubUsername) {
-  return {
-    'Authorization': `token ${githubToken}`,
-    'Content-Type': 'application/json',
-    'User-Agent': githubUsername
-  };
-}
-
