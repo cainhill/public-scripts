@@ -50,6 +50,7 @@ function callGithubApi(apiUrl, method, headers, payload) {
 }
 
 function getFileShaInternal(githubUsername, githubRepo, filePath, branch, headers) {
+  Logger.log(`getFileShaInternal(githubUsername: ${githubUsername}, githubRepo: ${githubRepo}, filePath: ${filePath}, branch: ${branch}, headers: ${JSON.stringify(headers)})`);
   const apiUrl = `https://api.github.com/repos/${githubUsername}/${githubRepo}/contents/${filePath}?ref=${branch}`;
   const response = callGithubApi(apiUrl, 'GET', headers, null);
   return response.code === 200 && response.json && response.json.sha ? response.json.sha : null;
