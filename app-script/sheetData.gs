@@ -186,3 +186,55 @@ function saveSheetData(sheetId, columnName, rowData) {
     return false;
   }
 }
+
+
+
+function getSheetData(sheetId, filterFunction, limit) {
+  Logger.log(`getSheetData(sheetId "${sheetId}", filterFunction "${filterFunction}", limit "${limit}")`);
+
+  // Get the sheet info (we only need basic info here)
+  const sheetInfo = getSheetInfo(sheetId, null); // We don't need a specific key column for filtering
+  Logger.log(`getSheetData().sheetInfo = ${JSON.stringify(sheetInfo)}`);
+  if (!sheetInfo) return false;
+  try {
+
+    const { sheet, columnHeadings } = sheetInfo;
+
+    // Get all values on the sheet including column headings
+    const values = sheet.getDataRange().getValues();
+    Logger.log(`getSheetData().values.length = ${values.length}`);
+
+    // Return null if the sheet is empty (or only has headers)
+    if (values.length <= 1) return null;
+
+    // Store all data rows (excluding the header)
+    const dataRows = values.slice(1);
+    Logger.log(`getSheetData().dataRows.length = ${dataRows.length}`);
+
+    const results = [];
+
+    for (const row of dataRows) {
+      // Convert the current row into a rowObject
+      const rowObject = {};
+      for (let i = 0; i < columnHeadings.length; i++) {
+        rowObject[columnHeadings[i]] = row[i];
+      }
+
+      // Apply the filter function to the rowObject
+      if (filterFunction(rowObject)) {
+        results.push(rowObject);
+        if (limit !== undefined && results.length >= limit) {
+          break; // Stop looping once the limit is reached
+        }
+      }
+    }
+
+    Logger.log(`getSheetData(): Found ${results.length} rows matching the filter.`);
+    return results.length > 0 ? results : null;
+
+  } catch (e) {
+    Logger.log(`getSheetData(${sheetId}).error = ${e.toString()}`);
+    return false;
+  }
+}
+
