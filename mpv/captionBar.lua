@@ -54,7 +54,7 @@ function display_metadata()
     -- Fetch metadata
     local title = mp.get_property("media-title");
 
-    -- If title is empty or missing, fallback to filename
+    -- If title is empty or missing, prompt user to add a title to the video
     if not title or title == "" then
         title = "[Please add a title to this video]"
     end
