@@ -18,8 +18,7 @@ function getDocsFromLastSevenDays(contentFolderId) {
   logs(`Started: Searching for docs changed in the last seven days (getDocsFromLastSevenDays)`, 1);
   const docs = getFiles(searchQuery);
   logs('', -1);
-  logs(`Result: Found "${docs.length}" docs changed in the last seven days (getDocsFromLastSevenDays)`);
-  logs('', -1);
+  logs(`Result: Found "${docs.length}" docs changed in the last seven days (getDocsFromLastSevenDays)`, -1);
 
   return docs;
 
@@ -97,8 +96,8 @@ function updateTrackerWithLatestChanges(docs, contentTrackerSheet) {
 
   }
 
-  logs('', -1);
-  logs(`Result: Finished updating tracker with latest changes (updateTrackerWithLatestChanges)`, -1);
+  logs('', -2);
+  logs(`Result: Finished updating tracker with latest changes (updateTrackerWithLatestChanges)`);
 
 }
 
