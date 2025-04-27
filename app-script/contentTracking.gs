@@ -43,7 +43,8 @@ function updateTrackerWithAllDocs(docs, contentTrackerSheet) {
   logs(`Started: Updating tracker with all docs (updateTrackerWithAllDocs)`, 1);
   logs(`Found:`, 1);
   for (const doc of docs) {
-    const docInfo = getLatestDocInfo(doc, contentTrackerSheet);
+    const contentTrackerRow = contentTrackerSheet.find('id', doc.id);
+    const docInfo = getLatestDocInfo(doc, contentTrackerRow);
     if (!(docInfo.publishedLink)) continue;
     logs(JSON.stringify(docInfo));
     const rowIndex = contentTrackerSheet.rowIndex('id', docInfo.id);
@@ -59,7 +60,8 @@ function updateTrackerWithLatestChanges(docs, contentTrackerSheet) {
   logs(`Started: Updating tracker with latest changes (updateTrackerWithLatestChanges)`, 1);
   logs(`Found:`, 1);
   for (const doc of docs) {
-    const docInfo = getLatestDocInfo(doc, contentTrackerSheet);
+    const contentTrackerRow = contentTrackerSheet.find('id', doc.id);
+    const docInfo = getLatestDocInfo(doc, contentTrackerRow);
     if (!(docInfo.publishedLink && (new Date(docInfo.lastModified)) > (new Date(docInfo.lastBuilt)))) continue;
     logs(JSON.stringify(docInfo));
     const rowIndex = contentTrackerSheet.rowIndex('id', docInfo.id);
@@ -73,14 +75,15 @@ function updateTrackerWithLatestChanges(docs, contentTrackerSheet) {
   logs(`Result: Finished updating tracker with latest changes (updateTrackerWithLatestChanges)`);
 }
 
-function getLatestDocInfo(doc, contentTrackerSheet) {
-  const contentTrackerRow = contentTrackerSheet.find('id', doc.id);
+function getLatestDocInfo(doc, contentTrackerRow) {
   return {
     id: doc.id,
     title: doc.name,
     publishedLink: contentTrackerRow && contentTrackerRow.publishedLink ? contentTrackerRow.publishedLink : getPublishedLink(doc.id),
     lastModified: new Date(doc.modifiedTime).toISOString(),
-    lastBuilt: (contentTrackerRow && contentTrackerRow.lastBuilt && !isNaN(new Date(contentTrackerRow.lastBuilt).getTime())) ? new Date(contentTrackerRow.lastBuilt).toISOString() : new Date(Date.UTC(1900, 0, 1)).toISOString()
+    lastBuilt: (contentTrackerRow && contentTrackerRow.lastBuilt && !isNaN(new Date(contentTrackerRow.lastBuilt).getTime()))
+      ? new Date(contentTrackerRow.lastBuilt).toISOString()
+      : new Date(Date.UTC(1900, 0, 1)).toISOString()
   };
 }
 
