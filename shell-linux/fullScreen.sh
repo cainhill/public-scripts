@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Gets the name of any connected displays:
+#   xrandr --query | grep " connected" | awk '{ print $1 }'
+
 # Script to set display to 1x1 on the multiview
 
 WIDTH=3840
