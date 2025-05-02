@@ -12,14 +12,7 @@ OUTPUT="HDMI-A-0"
 DISPLAY=${DISPLAY:-:0}
 export DISPLAY
 
-# Generate modeline and mode name
-MODEL_LINE=$(cvt $WIDTH $HEIGHT $REFRESH_RATE | grep -oP '^Modeline\s+\K.*') || {
-    echo "Failed to generate modeline"; exit 1
-}
-MODE_NAME=$(echo "$MODEL_LINE" | awk '{print $1}' | tr -d '"')
 
-echo "Display: $DISPLAY"
-echo "Trying mode: $MODE_NAME"
 
 function mode_exists() {
     xrandr | grep -q "\"$MODE_NAME\""
@@ -58,9 +51,15 @@ function set_mode_on_output() {
     }
 }
 
-# Run steps
-add_new_mode_if_needed
-attach_mode_to_output_if_needed
-set_mode_on_output
+function main() {
 
-echo "Mode successfully applied."
+  CVT_RESPONSE = $(cvt $WIDTH $HEIGHT $REFRESH_RATE)
+
+}
+
+main
+
+# Run steps
+# add_new_mode_if_needed
+# attach_mode_to_output_if_needed
+# set_mode_on_output
