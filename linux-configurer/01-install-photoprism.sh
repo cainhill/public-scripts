@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # TODO: Install Portainer using CachyOS Installer
 
 sudo systemctl enable docker
