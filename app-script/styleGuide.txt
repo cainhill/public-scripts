@@ -1,0 +1,4 @@
+1. code should use "early returns" to limit/reduce indentation
+2. functions that attempt to "get" a value should return that value or null
+3. functions that attempt to "set" a value or perform an action should return true/false
+4. code that calls a "get" function should check the function's returned value before using it in subsequent code
