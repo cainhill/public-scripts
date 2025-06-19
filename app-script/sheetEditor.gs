@@ -14,21 +14,23 @@
 
 function SheetEditor(workbookId) {
 	
+	console.log(`[INFO] [SheetEditor] - Started to open the Google Sheet for reading. (workbookId: ${workbookId})`);
+	
 	try {
     const workbook = SpreadsheetApp.openById(workbookId);
   } catch (error) {
-    console.error(`[ERROR] [SheetEditor] - Stopped because unable to open the Google Sheet. Please recheck the workbookId to resolve. (workbookId: ${workbookId})`);
+    console.error(`[ERROR] [SheetEditor] - Stopped opening the Google Sheet because of unknown issue. Please recheck the workbookId. (workbookId: ${workbookId})`);
     return null;
   }
 	
-	console.log(`[INFO] [SheetEditor] - Started to confirm if sheet is well-structured for editing. (workbookId: ${workbookId})`);
+	console.log(`[INFO] [SheetEditor] - Started pre-checks to confirm the sheet is well-structured for editing. (workbookId: ${workbookId})`);
 	
   const sheet = workbook.getSheets()[0]; // Read from the first sheet only
 	const sheetName = sheet.getName();
   const data = sheet.getDataRange().getValues();
   
   if (data.length === 0) {
-		console.error(`[ERROR] [SheetEditor] - Stopped because this sheet seems blank. Please make sure this sheet at least has column headings. (sheetName: ${sheetName})`)
+		console.error(`[ERROR] [SheetEditor] - Stopped pre-checks because this sheet seems blank. Please make sure this sheet at least has column headings. (sheetName: ${sheetName})`)
 		return null;
 	}
 	
@@ -38,7 +40,7 @@ function SheetEditor(workbookId) {
 	
   const columnsToIndex = header.filter(columnName => /[A-Z]/.test(columnName));
 	if (columnsToIndex.length === 0) {
-		console.error(`[ERROR] [SheetEditor] - Stopped because this sheet is missing index column(s). Please make sure this sheet has at least one index column. (sheetName: ${sheetName})`)
+		console.error(`[ERROR] [SheetEditor] - Stopped pre-checks because this sheet is missing index column(s). Please make sure this sheet has at least one index column. (sheetName: ${sheetName})`)
 		return null;
 	}
 	
@@ -47,8 +49,6 @@ function SheetEditor(workbookId) {
   });
 	
   const primaryKeyColumn = columnsToIndex[0];
-	
-  console.log(`[INFO] [SheetEditor] - Finished. Confirmed that structure looks good for editing. (workbookId: ${workbookId}, primaryKeyColumn: ${primaryKeyColumn})`);
 	
 	console.log(`[INFO] [SheetEditor] - Started reading sheet into memory. (workbookId: ${workbookId})`);
 	
@@ -60,7 +60,7 @@ function SheetEditor(workbookId) {
     columnsToIndex.forEach(indexedColumn => {
       const value = obj[indexedColumn];
       if (value === undefined || value === '' || indexes[indexedColumn][value]) {
-				console.warn(`[WARN] [SheetEditor] - Skipped adding this row to indexed column. Please recheck the row content. (row: ${JSON.stringify(obj)}, indexedColumn: ${indexedColumn})`);
+				console.warn(`[WARN] [SheetEditor] - Skipped adding this row to indexed colum because of row content. Please recheck the row content. (row: ${JSON.stringify(obj)}, indexedColumn: ${indexedColumn})`);
 				return;
 			}
       indexes[indexedColumn][value] = obj;
@@ -68,14 +68,14 @@ function SheetEditor(workbookId) {
     return obj;
 	});
 	
-  console.log(`[INFO] [SheetEditor] - Finished reading sheet into memory.`);
+  console.log(`[INFO] [SheetEditor] - Finished reading sheet into memory. Editing functions are now available.`);
 	
 	return {
 		
 	  // Returns a single row that matches a search value in a given indexed column
 		getByIndex: (indexedColumn, searchValue) => {
 			if (!indexes[indexedColumn]) {
-				console.error(`[ERROR] [SheetEditor] - Failed to search this column given this column is not indexed, returning null (indexedColumn: ${indexedColumn})`);
+				console.error(`[ERROR] [SheetEditor] - Stopped because the referenced column is not indexed. Please make sure the column is indexed. (indexedColumn: ${indexedColumn})`);
 				return null;
 			}
 			return indexes[indexedColumn][searchValue] || null;
@@ -90,7 +90,7 @@ function SheetEditor(workbookId) {
 		apply: (obj) => {
 			
 			if (!obj[primaryKeyColumn] || obj[primaryKeyColumn] === '') {
-				console.error(`[ERROR] [SheetEditor] - Cannot apply this row because the given object is missing a value for its primary key (primaryKeyColumn: ${primaryKeyColumn}, row: ${JSON.stringify(obj)})`);
+				console.error(`[ERROR] [SheetEditor] - Stopped because the given object is missing a value for its primary key. Please make sure the row object contains a valid value for its primary key column. (primaryKeyColumn: ${primaryKeyColumn}, row: ${JSON.stringify(obj)})`);
 				return false;
 			}
 			
@@ -143,12 +143,12 @@ function SheetEditor(workbookId) {
 					writeRange.setValues(dataToWrite);
 				}
 				
-				console.log(`[INFO] [SheetEditor] - Saved rows to sheet (rows.length: ${rows.length})`);
+				console.log(`[INFO] [SheetEditor] - Saved rows to sheet. (rows.length: ${rows.length})`);
 				return true;
 				
 			} catch (error) {
 				
-				console.error(`[ERROR] [SheetEditor] - Failed to save to sheet: ${error.message}`);
+				console.error(`[ERROR] [SheetEditor] - Stopped saving to sheet because of unknown error. Please check the error message to resolve. (error.message: ${error.message})`);
 				return false;
 				
 			}
