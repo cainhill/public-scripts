@@ -1,0 +1,20 @@
+# ~/.config/xremap/config.yml
+modmap:
+	- name: Disable normal mute button behaviour
+	  remap:
+			Mute: []
+keymap:
+  - name: Apply keyboard1 shortcuts
+    device:
+      only: '/dev/input/by-id/keyboard1'
+    remap:
+      Mute:
+			  skip_key_event: true
+				launch: ["python3", "/home/cain_and_logan/projects/publicScripts/autoHome/toggleScreen.py", "keyboard1"]
+  - name: Apply keyboard2 shortcuts
+    device:
+      only: '/dev/input/by-id/keyboard2'
+    remap:
+      Mute:
+			  skip_key_event: true
+				launch: ["python3", "/home/cain_and_logan/projects/publicScripts/autoHome/toggleScreen.py", "keyboard2"]
