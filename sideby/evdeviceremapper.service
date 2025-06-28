@@ -1,21 +1,36 @@
+# 
+# 1. Make sure evdevremapkeys
+#    is saved here:
+#    %h/.local/bin/evdevremapkeys
 #
-# 1. Copy this config file to user services directory:
-#    cp evdeviceremapkeys.service /etc/systemd/user/
+# 2. Confirm it has permission to execute:
+#    chmod +x %h/.local/bin/evdevremapkeys
 #
-# 2. Enable and start this service:
+# 3. Make sure your evdevremapkeys
+#    configuration is saved here:
+#    %h/.config/evdevremapkeys/evdevremapkeys.yaml
+#
+# 4. Confirm evdevremapkeys works when run manually
+#    evdevremapkeys --help
+#
+# 5. Copy this service file here:
+#    sudo cp ./evdeviceremapkeys.service /etc/systemd/user/
+#
+# 6. Enable and start the service:
 #    systemctl --user daemon-reload
 #    systemctl --user enable evdevremapkeys
 #    systemctl --user start evdevremapkeys
 # 
-# 3. Check if evdevmapkeys logged any errors:
+# 7. Check if evdevmapkeys logged any errors:
 #    journalctl -u evdevremapkeys
+#    systemctl --user status evdevremapkeys
 #
 
 [Unit]
 Description=evdevremapkeys
 
 [Service]
-ExecStart=evdevremapkeys
+ExecStart=%h/.local/bin/evdevremapkeys --config %h/.config/evdevremapkeys/evdevremapkeys.yaml
 Type=exec
 Restart=always
 
